@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .btn {
+        display: inline-flex;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+
+const myIp = "192.168.0.24";
+const myLocalIp = "127.0.0.1";
+
+const ON_VAL = 1;
+const OFF_VAL = 0;
+
+$(document).ready(function(){
+    getVideos();
+    getSwitch();
+
+    $("#btnOn").click(function(){
+        let myData = getSwitchJson(ON_VAL);
+        $.ajax({
+            url: `http://${myLocalIp}:5000/switch`,
+            method: "PUT",
+            data: JSON.stringify(myData),
+            contentType: "application/json; charset=utf-8"
+        })
+        .done(function() {
+            alert("Successfully switched on");
+            getSwitch();
+        })
+        .fail(function() {
+            alert("Switch on failed. Please check it again.");
+        });
+    });
+
+    $("#btnOff").click(function(){
+        let myData = getSwitchJson(OFF_VAL);
+        $.ajax({
+            url: `http://${myLocalIp}:5000/switch`,
+            method: "PUT",
+            data: JSON.stringify(myData),
+            contentType: "application/json; charset=utf-8"
+        })
+        .done(function() {
+            alert("Successfully switched off");
+            getSwitch();
+        })
+        .fail(function() {
+            alert("Switch off failed. Please check it again.");
+        });
+    });
+});
+
+
+function getSwitchJson(switchValue) {
+    return {
+        "switch": switchValue
+    };
+}
+
+function getVideos() {
+    $.ajax({
+        url: `http://${myLocalIp}:5000/video`,
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(json) {
+        json.forEach(element => {
+            $("#videoTbody").append(`<tr>
+                                        <th scope='row'>${element.id}</th>
+                                        <td><a href='/display/${element.name}'>${element.date_created}</a></td>
+                                    </tr>`)
+        });
+    })
+}
+
+function getSwitch() {
+    $.ajax({
+        url: `http://${myLocalIp}:5000/switch`,
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(json) {
+        $("#switchVal").empty();
+        $("#switchVal").append(`<p>current switch: <b>${json.switch}</b> </p>`);
+    })
+}
+
+</script>
+<body>
+
+    <div class="btn">
+        <button type="button" id="btnOn" class="btn btn-primary btn-sm">On</button>
+        <button type="button" id="btnOff" class="btn btn-secondary btn-sm">Off</button>
+    </div>
+
+    <div id="switchVal">
+    </div>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">created time</th>
+          </tr>
+        </thead>
+        <tbody id="videoTbody">
+        </tbody>
+      </table>
+
+      <h2 style="
+font-style: italic ;
+font-weight: bold;
+font-size: 1.5em;
+line-height: 1.0em;
+color: navy;
+font-family: arial;
+">CCTV</h2>
+
+
+<input type="button" onclick="control();" value="GO">
+
+<script>
+    function control() {
+       document.location="/cam";
+    }
+
+</script>
+</body>
+</html>
