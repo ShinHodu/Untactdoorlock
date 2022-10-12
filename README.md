@@ -1,6 +1,7 @@
 라즈베리파이
 ============
-### 데이터베이스(Mysql Workbench) 
+
+<span style="color:blue"> ### 데이터베이스(Mysql Workbench) </span>
 sql 설정
 
 
