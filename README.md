@@ -1,6 +1,6 @@
 라즈베리파이
 ============
-## 데이터베이스 
+### 데이터베이스(Mysql Workbench) 
 sql 설정
 
 
@@ -25,4 +25,7 @@ CREATE TABLE hand (
 );
 ```
 
-##
+###hand_pipe.py
+
+![index](https://user-images.githubusercontent.com/73813738/195222095-400f1ef7-5415-48ae-a652-9b61a8a145e2.jpg)
++ space: 중지만 접기, clear: 중지 약지 접기
